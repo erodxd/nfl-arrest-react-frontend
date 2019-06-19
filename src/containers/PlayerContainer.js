@@ -2,13 +2,25 @@ import React from 'react'
 import PlayerCard from '../components/PlayerCard'
 
 function PlayerContainer(props) {
+    console.log(props)
+
+    const filteredPlayers = props.players.filter(player => player.name.includes(props.filter))
+
     return (
         <div className="ui cards">
             {props.players.map(player => 
                 <PlayerCard name={player.name}
-                team_name={player.team_name}
+                players={filteredPlayers}
+                teamCity={player.team_city} 
+                team={player.team}
                 position={player.position}
-                arrest_count={player.arrest_count} />
+                arrestDate={player.arrests.map(arrestDetails => 
+                arrestDetails.date)}
+                category={player.arrests.map(arrestDetails =>
+                arrestDetails.category)}
+                description={player.arrests.map(arrestDetails =>
+                arrestDetails.description)}    
+                />
             )}
         </div>
     )

@@ -3,18 +3,30 @@ import React, { Component } from 'react';
 import './App.css';
 import './App.sass'
 import PlayerContainer from './containers/PlayerContainer'
+import SortBar from './components/SortBar';
+import { Route } from 'react-router-dom';
+import SearchInput from './components/SearchInput'
 
-
-const API = "http://NflArrest.com/api/v1/player"
-
+const playerAPI = "http://localhost:3000/players"
 class App extends Component {
 
   state = {
-    players: []
+    players: [],
+    filter: ""
+  }
+
+  changeFilter = (newFilterValue) => {
+    this.setState({
+      filter: newFilterValue
+    })
   }
 
   componentDidMount(){
-    fetch(API)
+    this.getPlayers()
+  }
+  
+  getPlayers = () => {
+    fetch(playerAPI)
     .then(res => res.json())
     .then(data => {
       this.setState({
@@ -23,41 +35,48 @@ class App extends Component {
     })
   }
 
+  sortPlayerPosition = () => {
+    //console.log(this.state.players)
+    const playerPositions = [...this.state.players].sort((a,b) => (a.position > b.position) ? 1 : -1 )
+    this.setState({
+      players: playerPositions
+    })
+  }
+
+  sortByTeam = () => {
+    const teamSort = [...this.state.players].sort((a,b) => (a.team > b.team) ? 1 : -1 )
+    this.setState({
+      players: teamSort
+    })
+  }
+
+  sortByCity = () => {
+    const citySort = [...this.state.players].sort((a,b) => (a.team_city > b.team_city) ? 1 : -1 )
+    this.setState({
+      players: citySort
+    })
+  }
+
   render() {
     return (
     <div className="App">
       <h1 className="title">NFL Arrest Records</h1>
         <p className="subtitle">
-            NFL Arrest data based on  {' '}
-          <a href="https://http://nflarrest.com/api/">
+            NFL arrest data powered by  {' '}
+          <a href="http://nflarrest.com/api/">
             NFL Arrest API 
           </a>
         </p>
 
-      <div className="field">
-        <p className="control">
-          <span className="select">
-            <select>
-              <option>Select dropdown</option>
-            </select>
-          </span>
-        </p>
-      </div>
-
-      <div className="field">
-      <div className="control">
-        <input className="input" type="text" placeholder="Input" />
-      </div>
+      <div className="buttons">
+        <a className="button is-primary">Sign-up</a>
+        <a className="button is-link">Comments</a>
       </div>
 
       <div>
-        <PlayerContainer players={this.state.players}/>
-      </div>
-
-
-      <div className="buttons">
-        <a className="button is-primary">Sign-Up</a>
-        <a className="button is-link">Logout</a>
+        <SearchInput changeFilter={this.changeFilter}/>
+        <SortBar sortPlayerPosition={this.sortPlayerPosition} sortByTeam={this.sortByTeam} sortByCity={this.sortByCity}/>
+        <PlayerContainer players={this.state.players} filter={this.state.filter}/>
       </div>
     </div>
     );
