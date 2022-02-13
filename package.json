@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "ajv": "^6.8.1",
+    "ajv": "^6.12.3",
     "bulma": "^0.7.5",
     "husky": "^2.4.1",
     "jshint": "^2.10.2",
